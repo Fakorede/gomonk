@@ -18,7 +18,7 @@ type Parser struct {
 
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
-		l: l,
+		l:      l,
 		errors: []string{},
 	}
 
@@ -62,11 +62,14 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.LET:
 		return p.parseLetStatement()
+	case token.RETURN:
+		return p.parseReturnStatement()
 	default:
 		return nil
 	}
 }
 
+// parseLetStatement constructs an ast representation for the let  statement
 func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.curToken}
 
@@ -104,4 +107,18 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 		p.peekError(t)
 		return false
 	}
+}
+
+// parseReturnStatement constructs an ast representation for the return statement
+func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
+	stmt := &ast.ReturnStatement{Token: p.curToken}
+
+	p.nextToken()
+
+	// Skip the expressions until a semicolon is encountered
+	for !p.curTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
 }

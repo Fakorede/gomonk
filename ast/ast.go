@@ -29,6 +29,7 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
+// LetStatement is used to represent a 'let' statement
 type LetStatement struct {
 	Token token.Token // token.LET
 	Name  *Identifier
@@ -45,4 +46,13 @@ type Identifier struct {
 }
 
 func (i *Identifier) expressionNode()      {}
-func (i *Identifier) tokenLiteral() string { return i.Token.Literal }
+func (i *Identifier) TokenLiteral() string { return i.Token.Literal }
+
+// ReturnStatement is used to represent a 'return' statement
+type ReturnStatement struct {
+	Token       token.Token // token.RETURN
+	ReturnValue Expression
+}
+
+func (rs *ReturnStatement) statementNode()       {}
+func (rs *ReturnStatement) TokenLiteral() string { return rs.Token.Literal }
